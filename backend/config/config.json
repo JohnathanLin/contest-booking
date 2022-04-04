@@ -1,0 +1,20 @@
+{
+  "database": {
+    "name": "contest_booking",
+    "password": "root",
+    "user": "root",
+    "type": "mysql",
+    "host": "127.0.0.1",
+    "port": "3306",
+    "table_prefix": ""
+  },
+  "emailConf": {
+    "user": "windypath_system@126.com",
+    "password": "GAICYEMOHNMZFTSI",
+    "host": "smtp.126.com:25"
+  },
+  "systemConf": {
+    "testMode": 0,
+    "tickerTimeInterval": 600
+  }
+}

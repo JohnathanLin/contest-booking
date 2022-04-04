@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>赛事预约提醒系统</title>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    .text {
+      font-size: 14px;
+    }
+  
+    .item {
+      margin-bottom: 18px;
+    }
+  
+    .clearfix:before,
+    .clearfix:after {
+      display: table;
+      content: "";
+    }
+    .clearfix:after {
+      clear: both
+    }
+  
+    .box-card {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>赛事预约提醒系统</h1>
+    <el-card class="box-card" style="margin-bottom: 15px;">
+        <div slot="header" class="clearfix">
+            <span>近期比赛</span>
+            <el-button @click="handleClick(scope.row)"  style="float: right;" type="text" size="small">访问lpl赛程页</el-button>
+            <el-button style="float: right; padding: 3px 0" type="text">刷新</el-button>
+        </div>
+        <el-table
+            :data="contestList"
+            style="width: 100%">
+            <el-table-column
+                prop="contestId"
+                label="比赛id"
+                width="80">
+            </el-table-column>
+            <el-table-column
+                prop="status"
+                label="状态"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="contestName"
+                label="赛事名称">
+            </el-table-column>
+            <el-table-column
+                prop="contestStage"
+                label="赛事阶段"
+               >
+            </el-table-column>
+            <el-table-column
+                prop="time"
+                label="比赛时间"
+              >
+            </el-table-column>
+            <el-table-column
+                prop="result"
+                label="对阵情况">
+            </el-table-column>
+
+            <el-table-column
+              prop="operation"
+              label="操作">
+              <template slot-scope="scope">
+                <el-button type="text" size="small" @click="visible = true">预约</el-button>
+              </template>
+            </el-table-column>          
+      </el-table>
+    </el-card>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span>当前预约</span>
+            <el-button style="float: right; padding: 3px 0" type="text">刷新</el-button>
+        </div>
+        <el-table
+            :data="bookingList"
+            style="width: 100%">
+            <el-table-column
+              prop="bookingId"
+              label="预约id"
+              width="80">
+            </el-table-column>
+          </el-table-column>
+            <el-table-column
+                prop="contestId"
+                label="比赛id"
+                width="80">
+            </el-table-column>
+            <el-table-column
+              prop="status"
+              label="状态"
+              width="80">
+          </el-table-column>
+            <el-table-column
+                prop="contestBriefName"
+                label="比赛名称"
+                >
+            </el-table-column>
+            <el-table-column
+              prop="target"
+              label="预约目标比分">
+          </el-table-column>
+            <el-table-column
+                prop="result"
+                label="结果">
+            </el-table-column>
+            <el-table-column
+              prop="emailStr"
+              label="预约邮箱"
+              >
+          </el-table-column>
+            <el-table-column
+                prop="operation"
+                label="操作">
+                <template slot-scope="scope">
+                  <el-button type="text" size="small"  @click="cancelAndDelete">取消并删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-card>
+    <el-button @click="visible = true">Button</el-button>
+    <el-dialog :visible.sync="visible" title="预约比赛">
+      <p>您要预约的比赛为: 2022职业联赛 春季赛季后赛 TES VS JDG</p>
+      <el-input
+        type="textarea"
+        :rows="2"
+        placeholder="预约邮箱"
+        v-model="bookingEmail">
+      </el-input>
+      <el-button type="text" size="small">预约</el-button>
+    </el-dialog>
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://lib.baomitu.com/vue/2.6.14/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { 
+            visible: false,
+            contestList: [
+              {
+                contestId: 1,
+                status: 1,
+                contestName: '2022职业联赛',
+                contestStage: '春季赛季后赛',
+                time: '2022-03-30 12:30:56',
+                result: 'TES 2:1 JDG'
+              },
+              {
+                contestId: 2,
+                status: 2,
+                contestName: '2022职业联赛',
+                contestStage: '春季赛季后赛',
+                time: '2022-03-30 12:30:56',
+                result: 'TES 2:1 JDG'
+              },
+              {
+                contestId: 3,
+                status: 3,
+                contestName: '2022职业联赛',
+                contestStage: '春季赛季后赛',
+                time: '2022-03-30 12:30:56',
+                result: 'TES 2:1 JDG'
+              },
+              {
+                contestId: 4,
+                status: 4,
+                contestName: '2022职业联赛',
+                contestStage: '春季赛季后赛',
+                time: '2022-03-30 12:30:56',
+                result: 'TES 2:1 JDG'
+              },
+            ],
+            bookingList: [
+              {
+                bookingId: 1,
+                contestId: 1,
+                contestBriefName: '2022职业联赛 春季赛季后赛 TES VS JDG',
+                result: 'TES 2:1 JDG',
+                emailStr: '12345678@qq.com',
+                target: 'TES 2:1 JDG',
+                status: 1
+              },
+              {
+                bookingId: 2,
+                contestId: 2,
+                contestBriefName: '2022职业联赛 春季赛季后赛 TES VS JDG',
+                result: 'TES 2:1 JDG',
+                emailStr: '12345678@qq.com',
+                target: 'TES 2:1 JDG',
+                status: 1
+              },
+              {
+                bookingId: 3,
+                contestId: 3,
+                contestBriefName: '2022职业联赛 春季赛季后赛 TES VS JDG',
+                result: 'TES 2:1 JDG',
+                emailStr: '12345678@qq.com',
+                target: 'TES 2:1 JDG',
+                status: 1
+              },
+              {
+                bookingId: 4,
+                contestId: 4,
+                contestBriefName: '2022职业联赛 春季赛季后赛 TES VS JDG',
+                result: 'TES 2:1 JDG',
+                emailStr: '12345678@qq.com',
+                target: 'TES 2:1 JDG',
+                status: 1
+              },
+            ],
+            axiosInstance: null,
+           
+          bookingEmail: '', 
+         }
+      },
+      created() {
+        axiosInstance = axios.create({
+          baseURL: 'http://127.0.0.1:8081',
+          timeout: 1000,
+          headers: {'X-Custom-Header': 'foobar'}
+        });
+        this.fetchLPLContestData()
+      },
+      methods: {
+        fetchLPLContestData() {
+          axiosInstance.get('getContestList/', {
+        
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+          $.ajax({
+            //请求方式
+            type : "GET",
+            //请求的媒体类型
+            contentType: "application/json;charset=UTF-8",
+            //请求地址
+            url : "http://127.0.0.1:8081/getContestList/",
+            dataType : "jsonp",
+            //数据，json字符串
+            // data : JSON.stringify(list),
+            //请求成功
+            success : function(result) {
+                console.log(result);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+              console.log(e)
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+          });
+        },
+
+        cancelAndDelete() {
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+        }
+      }
+    })
+  </script>
+</html>
